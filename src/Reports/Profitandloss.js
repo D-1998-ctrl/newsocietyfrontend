@@ -89,7 +89,7 @@ const Profitandloss = () => {
     return (
         <Box>
             <Box textAlign={'center'} mt={1}>
-                <Typography sx={{ color: '#157497', }} variant='h4'><b>Profit And Loss Report</b></Typography>
+                <Typography sx={{ color: 'var(--primary-color)', }} variant='h4'><b>Profit And Loss Report</b></Typography>
             </Box>
 
             <Box sx={{ p: 5, height: 'auto' }}>
@@ -133,11 +133,11 @@ const Profitandloss = () => {
 
                 <Box display={'flex'} alignItems={'center'} justifyContent={'center'} gap={2} mt={5}>
                     <Button
-                    sx={{ background: '#1b575c' }}
+                    sx={{ background: 'var(--secondary-color)' }}
                         variant="contained"
                         onClick={getProfitandloss}
                     >
-                        Get Profit & Loss Report
+                        <b>Get Profit & Loss Report </b>
                     </Button>
                 </Box>
 

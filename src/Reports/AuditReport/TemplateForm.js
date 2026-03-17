@@ -192,7 +192,7 @@ const TemplateForm = () => {
 
             <Button
               variant="contained"
-              sx={{ background: '#10370d', color: '#ffffff' }}
+              sx={{ background: 'var(--secondary-color)', color: '#ffffff' }}
               onClick={() =>
                 append({
                   tempId: "",

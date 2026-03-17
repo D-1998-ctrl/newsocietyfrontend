@@ -388,7 +388,6 @@ const BillInvoice = () => {
 
   //   setRows(mappedRows);
   // };
-
   const [openPreview, setOpenPreview] = useState(false);
   const handlePreview = async (rowData) => {
     const invoiceData = await buildInvoiceData(rowData);

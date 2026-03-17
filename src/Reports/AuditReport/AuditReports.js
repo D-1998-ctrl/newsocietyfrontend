@@ -1,144 +1,4 @@
 
-//with useform hook
-// import { useState } from "react";
-// import {
-//   Box,
-//   Button,
-//   Stepper,
-//   Step,
-//   StepLabel,
-//   Typography,
-// } from "@mui/material";
-// import { useForm, FormProvider } from "react-hook-form";
-
-// import Form1 from "./Form1";
-// import Form28 from "./Form28";
-// import Schdule from "./Schdule";
-// import TemplateForm from "./TemplateForm";
-// import SkipNextIcon from '@mui/icons-material/SkipNext';
-// import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
-
-// const steps = ["Template Form", "Form 1", "Form 28", "Schedule"];
-
-// const AuditReports = () => {
-//   const [showStepper, setShowStepper] = useState(false);
-//   const [activeStep, setActiveStep] = useState(0);
-
-//   const methods = useForm({
-//     defaultValues: {
-//       tempId: "",
-//       subject: "",
-//       tempBody: "",
-//       auditoraddress: "",
-//       auditormobileno: "",
-//       AgencysanctioningLoan: "",
-//       ScheduleI: "",
-//     },
-//   });
-
-//   const handleNext = () => setActiveStep((prev) => prev + 1);
-//   const handleBack = () => setActiveStep((prev) => prev - 1);
-
-//   const handleSave = async (data) => {
-//     try {
-//       console.log("Final Form Data:", data);
-//       const response = await fetch("http://localhost:8001/Audireport/", {
-//         method: "POST",
-//         headers: { "Content-Type": "application/json" },
-//         body: JSON.stringify(data),
-//       });
-//       const result = await response.json();
-//       console.log("Saved:", result);
-//       alert("Audit Report Saved Successfully!");
-//     } catch (error) {
-//       console.error("Save Error:", error);
-//     }
-//   };
-
-//   const renderStepContent = (step) => {
-//     switch (step) {
-//       case 0: return <TemplateForm />;
-//       case 1: return <Form1 />;
-//       case 2: return <Form28 />;
-//       case 3: return <Schdule />;
-//       default: return <Typography>Unknown Step</Typography>;
-//     }
-//   };
-
-//   return (
-//     <Box p={3}>
-//       <Button sx={{ background: '#1b575c' }} variant="contained" onClick={() => setShowStepper(true)}>
-//         Create Audit Reports
-//       </Button>
-
-//       {showStepper && (
-//         <Box mt={4}>
-//           {/* <Stepper  activeStep={activeStep}>
-//             {steps.map((label, index) => (
-//               <Step   key={index}>
-//                 <StepLabel>{label}</StepLabel>
-//               </Step>
-//             ))}
-//           </Stepper> */}
-//           <Stepper
-//             activeStep={activeStep}
-//             sx={{
-//               '& .MuiStepIcon-root.Mui-active': { color: '#0c3c41' },
-//               '& .MuiStepIcon-root.Mui-completed': { color: '#0c3c41' },
-//               '& .MuiStepConnector-root .MuiStepConnector-line': {
-//                 borderColor: '#157497'
-//               }
-//             }}
-//           >
-//             {steps.map((label, index) => (
-//               <Step key={index}>
-//                 <StepLabel>{label}</StepLabel>
-//               </Step>
-//             ))}
-//           </Stepper>
-
-
-//           <FormProvider {...methods}>
-//             <Box mt={3}>{renderStepContent(activeStep)}</Box>
-
-//             <Box mt={2}>
-//               <Button disabled={activeStep === 0} onClick={handleBack}>
-
-//                 <SkipPreviousIcon  sx={{ color: '#1b575c' }}/>
-//                 back
-//               </Button>
-
-//               {activeStep !== steps.length - 1 ? (
-//                 <Button
-//                   // variant="contained"
-//                   onClick={handleNext}
-//                   sx={{ ml: 2 }}
-//                 >
-//                   next
-//                   <SkipNextIcon sx={{ color: '#1b575c' }}/>
-//                 </Button>
-//               ) : (
-//                 <Button
-//                    variant="contained"
-//                   color="success"
-//                   sx={{ ml: 2 }}
-//                   onClick={methods.handleSubmit(handleSave)} // ✅ triggers only here
-//                 >
-//                   Save Audit Report
-//                 </Button>
-//               )}
-//             </Box>
-//           </FormProvider>
-//         </Box>
-//       )}
-//     </Box>
-//   );
-// };
-
-// export default AuditReports;
-
-
-
 import { useState } from "react";
 import {
   Box,
@@ -356,24 +216,18 @@ const AuditReports = () => {
 
   return (
     <Box p={3}>
-      <Button sx={{ background: '#1b575c' }} variant="contained" onClick={() => setShowStepper(true)}>
+      <Button sx={{ background: 'var(--complementary-color)',fontWeight:'bold' }} variant="contained" onClick={() => setShowStepper(true)}>
         Create Audit Reports
       </Button>
 
       {showStepper && (
         <Box mt={4}>
-          {/* <Stepper  activeStep={activeStep}>
-            {steps.map((label, index) => (
-              <Step   key={index}>
-                <StepLabel>{label}</StepLabel>
-              </Step>
-            ))}
-          </Stepper> */}
+        
           <Stepper
             activeStep={activeStep}
             sx={{
-              '& .MuiStepIcon-root.Mui-active': { color: '#0c3c41' },
-              '& .MuiStepIcon-root.Mui-completed': { color: '#0c3c41' },
+              '& .MuiStepIcon-root.Mui-active': { color: 'var(--primary-color)' },
+              '& .MuiStepIcon-root.Mui-completed': { color: 'var(--primary-color)' },
               '& .MuiStepConnector-root .MuiStepConnector-line': {
                 borderColor: '#157497'
               }
@@ -393,7 +247,7 @@ const AuditReports = () => {
             <Box mt={2}>
               <Button disabled={activeStep === 0} onClick={handleBack}>
 
-                <SkipPreviousIcon sx={{ color: '#1b575c' }} />
+                <SkipPreviousIcon sx={{ color: 'var(--primary-color)' }} />
                 back
               </Button>
 
@@ -404,14 +258,14 @@ const AuditReports = () => {
                   sx={{ ml: 2 }}
                 >
                   next
-                  <SkipNextIcon sx={{ color: '#1b575c' }} />
+                  <SkipNextIcon sx={{ color: 'var(--primary-color)' }} />
                 </Button>
               ) : (
                 <Button
                   variant="contained"
                   color="success"
                   sx={{ ml: 2 }}
-                  onClick={methods.handleSubmit(handleSave)} // ✅ triggers only here
+                  onClick={methods.handleSubmit(handleSave)} 
                 >
                   Save Audit Report
                 </Button>

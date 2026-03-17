@@ -22,14 +22,14 @@ const InvoicesNav = () => {
               textDecoration: "none",
               padding: "8px 16px",
               borderRadius: "4px",
-               color: '#1b575c',
+               color: 'var(--secondary-color)',
                fontWeight:"bold",
               "&:hover": {
-                backgroundColor: "#1b575c",
+                backgroundColor: "var(--secondary-color)",
                 color: "white",
               },
               "&.active": {
-                backgroundColor: "#0b373a",
+                backgroundColor: "#1f5675",
                 color: "white",
               },
             }

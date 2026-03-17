@@ -239,7 +239,7 @@ const Audittemp = () => {
     return (
         <Box>
             <Box>
-                <Button ariant="contained" sx={{ background: '#1b575c', color: '#fff', ml: 2, mt: 4 }} onClick={handleDrawerOpen}>Create Audit Template</Button>
+                <Button ariant="contained" sx={{ background: 'var(--complementary-color)', color: '#fff', ml: 2, mt: 4,fontWeight:'bold' }} onClick={handleDrawerOpen}>Create Audit Template</Button>
             </Box>
 
             <Box mt={4} m={2} >
@@ -367,7 +367,7 @@ const Audittemp = () => {
                         <Box>
 
                             <Button
-                                sx={{ background: '#10370d', color: '#ffffff' }}
+                                sx={{ background: 'var(--secondary-color)', color: '#ffffff' }}
                                 onClick={handleSubmit}
                                 variant="contained"
                             >
@@ -379,7 +379,7 @@ const Audittemp = () => {
 
                         <Box>
                             <Button variant="outlined"
-                                sx={{ borderColor: '#1b575c', color: '#1b575c' }}
+                                sx={{ borderColor: 'var(--secondary-color)', color: 'var(--secondary-color)' }}
 
                                 onClick={handleDrawerClose}><b>Cancel </b> </Button>
                         </Box>

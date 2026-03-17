@@ -23,11 +23,14 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import "./sidebar.css";
 import { menuItems } from "../Components/menuItems";
 import logo from '../imgs/companyLogo.png';
-import logonew from '../imgs/logo.png';
+// import logonew from '../imgs/logo.png';
+import logonew from '../imgs/LogoFour.png';
 import user from '../imgs/user.png';
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-
+import { useNavigate } from "react-router-dom";
+// import LogoOne from "../imgs/LogoOne.png"
+import LogoOne from "../imgs/LogoThree.png"
 
 function Sidebar() {
     const API_URL = process.env.REACT_APP_URL
@@ -41,18 +44,19 @@ function Sidebar() {
     const [orgData, setOrgData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchOrgData = async () => {
             try {
                 const response = await fetch(`${API_URL}/Organisation/`);
-                
+
                 if (!response.ok) {
                     throw new Error("Failed to fetch organization data");
                 }
                 const data = await response.json();
                 console.log(data)
-                setOrgData(data[0]); 
+                setOrgData(data[0]);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -85,6 +89,11 @@ function Sidebar() {
             month: '2-digit',
             year: 'numeric'
         });
+    };
+
+    const logoutUser = () => {
+        // sessionStorage.clear();
+        navigate("/");
     };
 
     return (
@@ -143,24 +152,24 @@ function Sidebar() {
                                                 height: { xs: "20px", sm: "16px" },
                                             }}
                                         /> */}
-                                                <Chip
-                                                    label={orgData.Registration}
-                                                    sx={{
-                                                        fontSize: { sm: '0.6rem' },
-                                                        backgroundColor: "#25D366",
-                                                        color: "#fff",
-                                                        height: { xs: "20px", sm: "16px" },
+                                        <Chip
+                                            label={orgData.Registration}
+                                            sx={{
+                                                fontSize: { sm: '0.6rem' },
+                                                backgroundColor: "#25D366",
+                                                color: "#fff",
+                                                height: { xs: "20px", sm: "16px" },
 
-                                                        display: "flex",
-                                                        alignItems: "center",
-                                                        justifyContent: "center",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
 
-                                                        "& .MuiChip-label": {
-                                                            padding: "0 6px",   
-                                                            lineHeight: 1,
-                                                        },
-                                                    }}
-                                                />
+                                                "& .MuiChip-label": {
+                                                    padding: "0 6px",
+                                                    lineHeight: 1,
+                                                },
+                                            }}
+                                        />
 
                                     </Box>
 
@@ -226,16 +235,66 @@ function Sidebar() {
                         transition: "width 0.3s",
                     }}
                 >
-                    <Box sx={{ pt: 3, display: "flex", alignItems: "center", justifyContent: "start", gap: 1 }}>
+                    {/* <Box sx={{ pt: 3, display: "flex", alignItems: "center", justifyContent: "start", gap: 1 }}>
                         <div style={{ textAlign: "center" }}>
                             <img
-                                src={isCollapsed ? logonew : logo}
+                                src={isCollapsed ? logonew : LogoOne}
                                 alt="logo"
                                 style={{ height: "50px", margin: "0 auto", width: isCollapsed ? "50px" : "auto" }}
                             />
                         </div>
                         {!isCollapsed && <Typography variant="h5" className="company-name-text"></Typography>}
-                    </Box>
+                    </Box> */}
+
+
+
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            //  height: "250px",
+                            //  backgroundColor: "#053e64",
+                            borderRadius: "10px",
+                            overflow: "hidden",
+
+                        }}
+                    >
+                        <img
+                            src={isCollapsed ? logonew : LogoOne}
+                            alt="logo"
+                            style={{
+                                height: isCollapsed ? "60px" : "200px",
+                                width: "auto",
+                                objectFit: "contain"
+                            }}
+                        />
+                    </div>
+                    {/* <div
+  style={{
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+     height: "120px",
+    // backgroundColor: "#053e64",
+    // borderRadius: "10px",
+    overflow: "hidden",
+   
+  }}
+>
+  <img
+    src={isCollapsed ? logonew : LogoOne}
+    alt="logo"
+    style={{
+      height: isCollapsed ? "70px" : "220px",
+      width: "auto",
+      objectFit: "contain"
+    }}
+  />
+</div> */}
+
+
+
                     <Box className="sidebar-contents" sx={{ mt: 2 }}>
                         <List sx={{ cursor: "pointer" }}>
                             {menuItems.map((item, index) => (
@@ -251,7 +310,7 @@ function Sidebar() {
                                             "&:hover": {
                                                 color: "#fff",
                                                 // backgroundColor: "#2c85de",
-                                                 backgroundColor:"#1b90bb",
+                                                backgroundColor: "#1b90bb",
                                                 ".menu-icon": {
                                                     color: "#fff",
                                                 },
@@ -321,7 +380,7 @@ function Sidebar() {
                                     sx={{
                                         width: 35,
                                         height: 35,
-                                        border: '2px solid #046183' 
+                                        border: '2px solid #046183'
                                         // #2c85de'
                                     }}
                                 />
@@ -345,7 +404,7 @@ function Sidebar() {
                                                 backgroundColor: 'rgba(244, 67, 54, 0.08)'
                                             }
                                         }}
-                                    // onClick={logoutuser}
+                                        onClick={logoutUser}
                                     >
                                         <LogoutIcon />
                                     </IconButton>

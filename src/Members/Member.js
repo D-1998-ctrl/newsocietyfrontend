@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useMemo, } from 'react';
-import { FormControl, RadioGroup, FormControlLabel, Radio, Autocomplete, useMediaQuery, Box, Button, Typography, TextField, Drawer, Divider,Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { FormControl, RadioGroup, FormControlLabel, Radio, Autocomplete, useMediaQuery, Box, Button, Typography, TextField, Drawer, Divider, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { MaterialReactTable, useMaterialReactTable, } from 'material-react-table';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTheme } from "@mui/material/styles";
@@ -9,7 +9,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import moment from "moment";
 import { toast } from "react-toastify";
- import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete';
 import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios';
 
@@ -360,19 +360,6 @@ const Member = () => {
     }),
   });
 
-  // const table = useMaterialReactTable({
-  //   columns,
-  //   data: memberData,
-  //   enablePagination: true,
-  //   muiTableHeadCellProps: {
-  //     style: {
-  //       backgroundColor: "#ecfbfd",
-  //       color: "black",
-  //       fontSize: "16px",
-  //     },
-  //   },
-  // });
-
 
   //create and update member
   const handleSubmit = async () => {
@@ -499,34 +486,43 @@ const Member = () => {
 
   //delete member
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  
-      const handleDeleteTemp = () => {
-        const url = `${REACT_APP_URL}/Member/${memberId}`;
 
-        fetch(url, { method: "DELETE" })
-            .then((response) => response.json())
-            .then((data) => {
-                //console.log('data',data)
-                toast.success(`${memberName} deleted successfully!`);
-                fetchMemberData();
-                handleDrawerClose();
-                resetForm();
-            })
-            .catch((error) => {
-                console.error(error);
-                toast.error("Failed to delete template");
-            });
-    };
+  const handleDeleteTemp = () => {
+    const url = `${REACT_APP_URL}/Member/${memberId}`;
 
-    const handleConfirmDelete = () => {
-        handleDeleteTemp();
-        setOpenDeleteDialog(false);
-    };
+    fetch(url, { method: "DELETE" })
+      .then((response) => response.json())
+      .then((data) => {
+        //console.log('data',data)
+        toast.success(`${memberName} deleted successfully!`);
+        fetchMemberData();
+        handleDrawerClose();
+        resetForm();
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Failed to delete template");
+      });
+  };
+
+  const handleConfirmDelete = () => {
+    handleDeleteTemp();
+    setOpenDeleteDialog(false);
+  };
 
   return (
-    <Box>
-      <Box>
-        <Button ariant="contained" sx={{ background: '#1b575c', color: '#fff', ml: 2 }} onClick={handleDrawerOpen}>Create Members</Button>
+    <Box mt={2}>
+
+      <Box textAlign={'center'}>
+        <Typography
+          sx={{ color: 'var(--primary-color)' }}
+          variant="h4"
+        >
+          <b>Members</b>
+        </Typography>
+      </Box>
+      <Box >
+        <Button ariant="contained" sx={{ background: 'var(--complementary-color)', color: '#fff', ml: 2 }} onClick={handleDrawerOpen}> <b>Create Members</b></Button>
       </Box>
 
 
@@ -554,7 +550,7 @@ const Member = () => {
 
         <Box>
           <Box sx={{ padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#ecfbfd' }}>
-            <Typography m={2} fontWeight="bold" variant="h6">
+            <Typography m={2} color='var(--primary-color)' fontWeight="bold" variant="h6">
               {isEditing ? "Update Members" : "Create Members"}
             </Typography>
             <CloseIcon sx={{ cursor: 'pointer' }} onClick={handleDrawerClose} />
@@ -658,7 +654,7 @@ const Member = () => {
               <Box display={'flex'} alignItems={'center'} justifyContent={'space-between'} gap={5} mt={2}>
 
 
-                <Box >
+                <Box>
                   <Typography>
                     Floor
                   </Typography>
@@ -1077,59 +1073,59 @@ const Member = () => {
             </LocalizationProvider>
           </Box>
 
-        <Dialog
-                        open={openDeleteDialog}
-                        onClose={() => setOpenDeleteDialog(false)}
-                    >
-                        <DialogTitle><b>Confirm Delete </b></DialogTitle>
+          <Dialog
+            open={openDeleteDialog}
+            onClose={() => setOpenDeleteDialog(false)}
+          >
+            <DialogTitle><b>Confirm Delete </b></DialogTitle>
 
-                        <DialogContent>
-                            Are you sure you want to delete <b> {memberName}</b> this template?
-                        </DialogContent>
+            <DialogContent>
+              Are you sure you want to delete <b> {memberName}</b> this template?
+            </DialogContent>
 
-                        <DialogActions>
-                            <Button
-                                sx={{ background: '#185259', color: '#ffffff' }}
-                                onClick={() => setOpenDeleteDialog(false)}
-                                variant="contained"
-                            >
-                                No
-                            </Button>
+            <DialogActions>
+              <Button
+                sx={{ background: '#185259', color: '#ffffff' }}
+                onClick={() => setOpenDeleteDialog(false)}
+                variant="contained"
+              >
+                No
+              </Button>
 
-                            <Button sx={{ borderColor: '#185259' }}
+              <Button sx={{ borderColor: '#185259' }}
 
-                                variant="outlined"
-                                onClick={handleConfirmDelete}
-                            >
-                                <DeleteIcon color="error" />
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
+                variant="outlined"
+                onClick={handleConfirmDelete}
+              >
+                <DeleteIcon color="error" />
+              </Button>
+            </DialogActions>
+          </Dialog>
 
 
           <Box display={'flex'} alignItems={'center'} justifyContent={'center'} gap={2} mt={5} mb={5}>
             <Box>
               <Button
-                sx={{ background: '#10370d', color: '#ffffff' }}
+                sx={{  background: 'var(--secondary-color)',color: '#fff', fontWeight:'bold' }}
                 onClick={handleSubmit}
                 variant="contained"
               >
                 {isEditing ? "Update" : "Save"}
               </Button>
             </Box>
-           
+
 
             <Box>
               <Button
-                sx={{ borderColor: '#1b575c', color: '#1b575c' }}
+                sx={{ borderColor: 'var(--secondary-color)', color: 'var(--secondary-color)' }}
                 onClick={handleDrawerClose} variant='outlined'><b>Cancel</b> </Button>
             </Box>
 
-             <Box>
+            <Box>
               {isEditing && (
                 <Button color="error" variant="contained"
-                 onClick={() => setOpenDeleteDialog(true)}
-                 >
+                  onClick={() => setOpenDeleteDialog(true)}
+                >
                   Delete
                 </Button>
               )}
