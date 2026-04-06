@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Autocomplete, useMediaQuery, Box, Button, Typography, TextField, Drawer, Divider, } from '@mui/material';
 import { MaterialReactTable, useMaterialReactTable, } from 'material-react-table';
@@ -60,7 +58,7 @@ const ContraVoucher = () => {
       const response = await fetch(`${REACT_APP_URL}/Account`);
       const result = await response.json();
 
-      console.log("ledger info:", result);
+      // console.log("ledger info:", result);
 
       const options = result
         .filter((acc) => acc.groupId.groupCode === 7)
@@ -83,7 +81,7 @@ const ContraVoucher = () => {
       const response = await fetch(`${REACT_APP_URL}/Account`);
       const result = await response.json();
 
-      console.log("ledger info:", result);
+      // console.log("ledger info:", result);
 
       const options = result
         .filter((acc) => acc.groupId?.groupCode === 1)
@@ -178,7 +176,7 @@ const ContraVoucher = () => {
 
   const getContraVoucher = () => {
     const url = `${REACT_APP_URL}/ContraVoucher`;
-    console.log(" URL:", url);
+    // console.log(" URL:", url);
     const requestOptions = {
       method: "GET",
       redirect: "follow"
@@ -186,7 +184,7 @@ const ContraVoucher = () => {
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then(data => {
-        console.log('data', data);
+        // console.log('data', data);
         setContraData(data);
 
       })
@@ -330,7 +328,7 @@ const ContraVoucher = () => {
   });
 
   const handleEdit = async (ContraData) => {
-    console.log("This row has been clicked:", ContraData);
+    // console.log("This row has been clicked:", ContraData);
 
     setIsEditing(true);
     setContraId(ContraData._id);
@@ -357,7 +355,7 @@ const ContraVoucher = () => {
   const handlePreview = async (ContraData) => {
     setPreviewData(ContraData);
     setOpenPreview(true);
-    console.log("PREVIEW DATA:", ContraData);
+    // console.log("PREVIEW DATA:", ContraData);
   };
 
   //pdf preview
@@ -400,7 +398,7 @@ const ContraVoucher = () => {
       }
 
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setOrgData(data[0]);
     } catch (err) {
       console.error(err.message);

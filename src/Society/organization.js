@@ -83,7 +83,7 @@ const Organization = () => {
                 throw new Error("Failed to fetch organization data");
             }
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             setSocietyData(data);
         } catch (err) {
             console.error(err.message);
@@ -97,7 +97,7 @@ const Organization = () => {
             const url = isEditing
                 ? `${REACT_APP_URL}/Organisation/${soceityId}`
                 : `${REACT_APP_URL}/Organisation`;
-            console.log('url', url)
+            // console.log('url', url)
             const method = isEditing ? "PATCH" : "POST";
 
             const formattedRegisteredDate = moment(registrationDate).format("YYYY-MM-DD");
@@ -125,7 +125,7 @@ const Organization = () => {
             });
 
             const societyResult = await SocietyResponse.json();
-            console.log("Society saved:", societyResult);
+            // console.log("Society saved:", societyResult);
             if (!SocietyResponse.ok) {
                 throw new Error(societyResult.message || "Society save failed");
             }

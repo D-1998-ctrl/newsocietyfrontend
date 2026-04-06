@@ -121,8 +121,7 @@
 
 
 .sidebar-contents {
-  height: calc(100vh - 220px);
-  /* adjust based on your logo/header height */
+  height: calc(100vh - 350px);
   overflow-y: auto;
 }
 

@@ -1,6 +1,6 @@
 
 import { useState,useEffect } from "react";
-import {Select, MenuItem,FormControl, FormControlLabel, Box, TextField, Button, Typography, Paper, Stepper, Step, StepLabel, } from "@mui/material";
+import {Select, MenuItem,FormControl, Box, TextField, Button, Typography, Paper, Stepper, Step, StepLabel, } from "@mui/material";
 import soceity from "../imgs/soceity.jpg";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -33,7 +33,7 @@ const Signup = () => {
     };
 
     fetch(
-      "http://localhost:8001/finacialyrs/",
+      `${REACT_APP_URL}/finacialyrs/`,
       requestOptions
     )
       .then((response) => response.json())

@@ -92,7 +92,7 @@ const Ledgers = () => {
             }
 
             const data = await response.json();
-            console.log("data", data);
+            // console.log("data", data);
             setAccountData(data);
         } catch (err) {
             console.error(err.message);
@@ -102,7 +102,7 @@ const Ledgers = () => {
     const [accountId, setAccountId] = useState('')
 
     const handleEdit = async (rowData) => {
-        console.log("This row has been clicked:", rowData);
+        // console.log("This row has been clicked:", rowData);
         setIsEditing(true);
         setAccountId(rowData._id)
         setAccountName(rowData.accountName)
@@ -207,7 +207,7 @@ const Ledgers = () => {
             });
 
             const accountResult = await accountResponse.json();
-            console.log("Account saved:", accountResult);
+            // console.log("Account saved:", accountResult);
             if (!accountResponse.ok) {
                 throw new Error(accountResult.message || "Account save failed");
             }
@@ -284,7 +284,7 @@ const Ledgers = () => {
         fetch(`${REACT_APP_URL}/Voucher/ledger/${accountId}`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
-                console.log(result);
+                // console.log(result);
                 setVouchers(result);
                 setOpen(true)
             })

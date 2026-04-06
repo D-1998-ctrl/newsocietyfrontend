@@ -115,7 +115,7 @@ const Journalvouchers = () => {
       );
       const result = await response.json();
 
-      console.log("ledger info:", result);
+      // console.log("ledger info:", result);
 
 
       const options = result.map((inv) => ({
@@ -177,7 +177,7 @@ const Journalvouchers = () => {
         narration: narration || ""
       };
 
-      console.log("Payload sending:", receiptVoucherData);
+      // console.log("Payload sending:", receiptVoucherData);
 
       // ✅ UPDATE
       if (receiptId) {
@@ -227,7 +227,7 @@ const Journalvouchers = () => {
 
   const getRecieptVoucher = () => {
     const url = `${REACT_APP_URL}/RecieptVoucher`;
-    console.log(" URL:", url);
+    // console.log(" URL:", url);
     const requestOptions = {
       method: "GET",
       redirect: "follow"
@@ -235,7 +235,7 @@ const Journalvouchers = () => {
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then(data => {
-        console.log('data', data);
+        // console.log('data', data);
         setReceiptData(data);
 
       })
@@ -383,7 +383,7 @@ const Journalvouchers = () => {
   });
 
   const handleEdit = async (rowData) => {
-    console.log("This row has been clicked:", rowData);
+    // console.log("This row has been clicked:", rowData);
 
     setIsEditing(true);
     setReceiptId(rowData._id);
@@ -449,7 +449,7 @@ const Journalvouchers = () => {
   const handlePreview = async (rowData) => {
     setPreviewData(rowData);
     setOpenPreview(true);
-    console.log("PREVIEW DATA:", rowData);
+    // console.log("PREVIEW DATA:", rowData);
   };
 
   //pdf preview
@@ -482,7 +482,7 @@ const Journalvouchers = () => {
       }
 
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setOrgData(data[0]);
     } catch (err) {
       console.error(err.message);

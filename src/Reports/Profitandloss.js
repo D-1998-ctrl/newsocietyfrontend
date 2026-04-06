@@ -39,7 +39,7 @@ const Profitandloss = () => {
         fetch(url, requestOptions)
             .then((response) => response.json())
             .then(data => {
-                console.log('data', data)
+                // console.log('data', data)
                 setProfitlossData(data);
                 setPreviewOpen(true)
 
@@ -58,7 +58,7 @@ const Profitandloss = () => {
             }
 
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             setOrgData(data[0]);
         } catch (err) {
             console.error(err.message);

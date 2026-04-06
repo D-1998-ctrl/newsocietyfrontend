@@ -74,7 +74,7 @@ const PurchaseVoucher = () => {
       const response = await fetch(`${REACT_APP_URL}/Account`);
       const result = await response.json();
 
-      console.log("ledger info:", result);
+      // console.log("ledger info:", result);
 
       const options = result
         .filter((acc) => acc.groupId.groupCode === 25)
@@ -97,7 +97,7 @@ const PurchaseVoucher = () => {
       const response = await fetch(`${REACT_APP_URL}/Account`);
       const result = await response.json();
 
-      console.log("ledger info:", result);
+      // console.log("ledger info:", result);
 
       const options = result
         .filter((acc) => acc.groupId?.groupCode === 2)
@@ -183,7 +183,7 @@ const PurchaseVoucher = () => {
 
   const getPurchaseVoucher = () => {
     const url = `${REACT_APP_URL}/PurchaseVoucher`;
-    console.log(" URL:", url);
+    // console.log(" URL:", url);
     const requestOptions = {
       method: "GET",
       redirect: "follow"
@@ -191,7 +191,7 @@ const PurchaseVoucher = () => {
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then(data => {
-        console.log('data', data);
+        // console.log('data', data);
         setPurchaseData(data.data);
 
       })
@@ -320,7 +320,7 @@ const PurchaseVoucher = () => {
   });
 
   const handleEdit = async (VoucherData) => {
-    console.log("This row has been clicked:", VoucherData);
+    // console.log("This row has been clicked:", VoucherData);
 
     setIsEditing(true);
     setPurchaseId(VoucherData._id);
@@ -344,7 +344,7 @@ const PurchaseVoucher = () => {
   const handlePreview = async (VoucherData) => {
     setPreviewData(VoucherData);
     setOpenPreview(true);
-    console.log("PREVIEW DATA:", VoucherData);
+    // console.log("PREVIEW DATA:", VoucherData);
   };
 
   //pdf preview
@@ -387,7 +387,7 @@ const PurchaseVoucher = () => {
       }
 
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setOrgData(data[0]);
     } catch (err) {
       console.error(err.message);

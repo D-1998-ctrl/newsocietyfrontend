@@ -50,7 +50,7 @@ const Member = () => {
       );
       const result = await response.json();
 
-      console.log("ledger info:", result);
+      // console.log("ledger info:", result);
 
       const options = result.map((acc) => ({
         value: acc._id,
@@ -71,7 +71,7 @@ const Member = () => {
       const response = await axios.get(
         `${REACT_APP_URL}/wings/`,
       );
-      console.log(response.data);
+      // console.log(response.data);
       processWingData(response.data)
     } catch (error) {
       console.error(error);
@@ -90,7 +90,7 @@ const Member = () => {
         unitTypes: wing.unitTypes?.map((u) => u.propertyType)
       }));
 
-      console.log('options', wingOptions)
+      // console.log('options', wingOptions)
       setWingOptions(wingOptions);
     }
   };
@@ -104,7 +104,7 @@ const Member = () => {
       const response = await fetch(`${REACT_APP_URL}/service`);
       const result = await response.json();
 
-      console.log("service info:", result);
+      // console.log("service info:", result);
 
       if (result?.data && Array.isArray(result.data)) {
         const options = result.data.map((service) => ({
@@ -128,7 +128,7 @@ const Member = () => {
       const response = await fetch(`${REACT_APP_URL}/service`);
       const result = await response.json();
 
-      console.log("service info:", result);
+      // console.log("service info:", result);
 
       if (result?.data && Array.isArray(result.data)) {
         const options = result.data.map((service) => ({
@@ -174,7 +174,7 @@ const Member = () => {
       }
 
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setMemberData(data);
     } catch (err) {
       console.error(err.message);
@@ -184,7 +184,7 @@ const Member = () => {
   const [memberId, setMemberId] = useState('');
 
   const handleEdit = async (rowData) => {
-    console.log("This row has been clicked:", rowData);
+    // console.log("This row has been clicked:", rowData);
     setIsEditing(true);
     setMemberId(rowData._id);
     setMemberName(rowData.memberName)
@@ -410,7 +410,7 @@ const Member = () => {
       });
 
       const memberResult = await memberResponse.json();
-      console.log("Member saved:", memberResult);
+      // console.log("Member saved:", memberResult);
       if (!memberResponse.ok) {
         throw new Error(memberResult.message || "Member save failed");
       }
@@ -420,6 +420,7 @@ const Member = () => {
           ? "Member updated successfully"
           : "Member created successfully"
       );
+
 
       // ✅ Create Account 
       if (!isEditing) {
@@ -449,7 +450,9 @@ const Member = () => {
         toast.success("Account created successfully");
       }
 
+
       handleDrawerClose();
+      fetchMemberData();
       resetForm()
     } catch (error) {
       console.error("Error:", error);
@@ -1106,7 +1109,7 @@ const Member = () => {
           <Box display={'flex'} alignItems={'center'} justifyContent={'center'} gap={2} mt={5} mb={5}>
             <Box>
               <Button
-                sx={{  background: 'var(--secondary-color)',color: '#fff', fontWeight:'bold' }}
+                sx={{ background: 'var(--secondary-color)', color: '#fff', fontWeight: 'bold' }}
                 onClick={handleSubmit}
                 variant="contained"
               >

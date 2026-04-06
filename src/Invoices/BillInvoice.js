@@ -276,7 +276,7 @@ const BillInvoice = () => {
             <Button
               variant="contained"
               size="small"
-              sx={{ background: '#10370d' }}
+              sx={{ background: 'var(--secondary-color)' }}
               onClick={() => handleEdit(row.original)}
             >
               Edit
@@ -285,7 +285,7 @@ const BillInvoice = () => {
 
             <Button
               variant="contained"
-              sx={{ background: '#1b575c' }}
+              sx={{ background: '#1f5675' }}
               size="small"
               onClick={() => handlePreview(row.original)}
             >
@@ -343,7 +343,7 @@ const BillInvoice = () => {
   };
 
   const handleEdit = async (rowData) => {
-    console.log("This row has been clicked:", rowData);
+    // console.log("This row has been clicked:", rowData);
 
     setIsEditing(true);
     setRowId(rowData._id);
@@ -393,7 +393,7 @@ const BillInvoice = () => {
     const invoiceData = await buildInvoiceData(rowData);
     setPreviewData(invoiceData);
     setOpenPreview(true);
-    console.log("PREVIEW DATA:", invoiceData);
+    // console.log("PREVIEW DATA:", invoiceData);
   };
 
   const resetForm = () => {
@@ -423,7 +423,7 @@ const BillInvoice = () => {
       }
 
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setOrgData(data[0]);
     } catch (err) {
       console.error(err.message);
@@ -515,7 +515,7 @@ const BillInvoice = () => {
   return (
     <Box>
       <Box>
-        <Button ariant="contained" sx={{ background: '#1b575c', color: '#fff', ml: 2 }} onClick={handleDrawerOpen}>Create Bill Invoice</Button>
+        <Button ariant="contained" sx={{ background: 'var(--complementary-color)', color: '#fff', ml: 2,fontWeight:'bold' }} onClick={handleDrawerOpen}>Create Bill Invoice</Button>
       </Box>
 
       <Box mt={4} m={2} >
@@ -748,7 +748,7 @@ const BillInvoice = () => {
             onClick={handleDownloadPDF}
             endIcon={<DownloadForOfflineIcon />}
             sx={{
-              backgroundColor: "#10370d",
+              backgroundColor: "var(--secondary-color)",
 
               px: 2.5,
               py: 1,
@@ -759,7 +759,7 @@ const BillInvoice = () => {
           </Button>
 
 
-          <Button sx={{ borderColor: '#10370d', color: '#10370d', fontWeight: 600, }} variant="outlined" onClick={() => setOpenPreview(false)}>
+          <Button sx={{ borderColor: 'var(--secondary-color)', color: 'var(--secondary-color)', fontWeight: 600, }} variant="outlined" onClick={() => setOpenPreview(false)}>
             Close
           </Button>
 
@@ -783,7 +783,7 @@ const BillInvoice = () => {
         <Box>
           <Box sx={{ padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#ecfbfd' }}>
 
-            <Typography m={2} fontWeight="bold" variant="h6">
+            <Typography m={2} fontWeight="bold" variant="h6" color='var(--primary-color)'>
               {isEditing ? "Update Audit Template" : "Create Audit Template"}
             </Typography>
             <CloseIcon sx={{ cursor: 'pointer' }} onClick={handleDrawerClose} />
@@ -953,7 +953,7 @@ const BillInvoice = () => {
                           <TableCell align="center">
                             <Box display="flex" justifyContent="center" gap={1}>
                               <Button
-                                sx={{ backgroundColor: "#144145", color: "white" }}
+                                sx={{ backgroundColor: "var(--primary-color)", color: "white" }}
                                 onClick={handleAddRow}>
                                 <AddIcon />
                               </Button>
@@ -1049,7 +1049,7 @@ const BillInvoice = () => {
           <Box display={'flex'} alignItems={'center'} justifyContent={'center'} gap={2} mt={5} mb={5}>
             <Box>
               <Button
-                sx={{ background: '#10370d', color: '#ffffff' }}
+                sx={{ background: 'var(--secondary-color)', color: '#ffffff',fontWeight:'bold'  }}
                 onClick={handleSubmit}
                 variant="contained"
               >
@@ -1059,7 +1059,7 @@ const BillInvoice = () => {
 
             <Box>
               <Button
-                   sx={{ borderColor: '#1b575c', color: '#1b575c' }}
+                   sx={{ borderColor: 'var(--secondary-color)', color: 'var(--secondary-color)' }}
                 onClick={handleDrawerClose} variant='outlined'><b>Cancel</b> </Button>
             </Box>
           </Box>

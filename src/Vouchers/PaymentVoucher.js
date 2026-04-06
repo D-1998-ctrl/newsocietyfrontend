@@ -57,7 +57,7 @@ const PaymentVoucher = () => {
       const response = await fetch(`${REACT_APP_URL}/Account`);
       const result = await response.json();
 
-      console.log("ledger info:", result);
+      // console.log("ledger info:", result);
 
       const options = result
         .filter((acc) => acc.groupId.groupCode !== 7)
@@ -80,7 +80,7 @@ const PaymentVoucher = () => {
       const response = await fetch(`${REACT_APP_URL}/Account`);
       const result = await response.json();
 
-      console.log("ledger info:", result);
+      // console.log("ledger info:", result);
 
       const options = result
         .filter((acc) => acc.groupId?.groupCode === 7)
@@ -171,7 +171,7 @@ const PaymentVoucher = () => {
 
   const getPaymentVoucher = () => {
     const url = `${REACT_APP_URL}/PaymentVoucher`;
-    console.log(" URL:", url);
+    // console.log(" URL:", url);
     const requestOptions = {
       method: "GET",
       redirect: "follow"
@@ -179,7 +179,7 @@ const PaymentVoucher = () => {
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then(data => {
-        console.log('data', data);
+        // console.log('data', data);
         setPaymentData(data);
 
       })
@@ -319,7 +319,7 @@ const PaymentVoucher = () => {
   });
 
   const handleEdit = async (PaymentData) => {
-    console.log("This row has been clicked:", PaymentData);
+    // console.log("This row has been clicked:", PaymentData);
 
     setIsEditing(true);
     setPaymentId(PaymentData._id);
@@ -340,7 +340,7 @@ const PaymentVoucher = () => {
   const handlePreview = async (PaymentData) => {
     setPreviewData(PaymentData);
     setOpenPreview(true);
-    console.log("PREVIEW DATA:", PaymentData);
+    // console.log("PREVIEW DATA:", PaymentData);
   };
 
   //pdf preview
@@ -383,7 +383,7 @@ const PaymentVoucher = () => {
       }
 
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       setOrgData(data[0]);
     } catch (err) {
       console.error(err.message);

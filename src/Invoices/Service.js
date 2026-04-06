@@ -91,7 +91,7 @@ const Service = () => {
     fetch(url, requestOptions)
       .then((response) => response.json())
       .then(data => {
-        console.log('data', data);
+        // console.log('data', data);
         setServiceData(data.data);
 
       })
@@ -206,7 +206,7 @@ const Service = () => {
   return (
     <Box>
       <Box>
-        <Button ariant="contained" sx={{ background: '#1b575c', color: '#fff', ml: 2, mt: 4 }} onClick={handleDrawerOpen}>Create Services</Button>
+        <Button ariant="contained" sx={{ background: 'var(--complementary-color)', color: '#fff', ml: 2, mt: 4 }} onClick={handleDrawerOpen}>Create Services</Button>
       </Box>
 
       <Box mt={4} m={2} >
@@ -234,7 +234,7 @@ const Service = () => {
         <Box>
           <Box sx={{ padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#ecfbfd', }}>
 
-            <Typography m={2} fontWeight="bold" variant="h6">
+            <Typography m={2} fontWeight="bold" variant="h6" color='var(--primary-color)'>
               {isEditing ? "Update Services " : "Create Services "}
             </Typography>
             <CloseIcon sx={{ cursor: 'pointer' }} onClick={handleDrawerClose} />
@@ -377,7 +377,7 @@ const Service = () => {
             <Box>
 
               <Button
-                sx={{ background: '#10370d', color: '#ffffff' }}
+                sx={{ background: 'var(--secondary-color)', color: '#ffffff' }}
                 onClick={handleSubmit}
                 variant="contained"
               >
@@ -389,7 +389,7 @@ const Service = () => {
 
             <Box>
               <Button variant="outlined"
-                sx={{ borderColor: '#1b575c', color: '#1b575c' }}
+                sx={{ borderColor: 'var(--secondary-color)', color: 'var(--secondary-color)' }}
 
                 onClick={handleDrawerClose}><b>Cancel </b> </Button>
             </Box>

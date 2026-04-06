@@ -5,25 +5,23 @@ import { NavLink, Outlet } from "react-router-dom";
 const InvoicesNav = () => {
   return (
     <Box>
-      {/* <Box>
-        <Typography variant="h4">Invoices</Typography>
-      </Box> */}
+
       <Box >
         <Box
-         
+
           sx={{
             display: "flex",
 
             mt: 3,
-            flexWrap: "wrap", 
-            justifyContent: "space-around", 
+            flexWrap: "wrap",
+            justifyContent: "space-around",
             "& a": {
               // Styling for the NavLink components
               textDecoration: "none",
               padding: "8px 16px",
               borderRadius: "4px",
-               color: 'var(--secondary-color)',
-               fontWeight:"bold",
+              color: 'var(--secondary-color)',
+              fontWeight: "bold",
               "&:hover": {
                 backgroundColor: "var(--secondary-color)",
                 color: "white",
@@ -40,11 +38,11 @@ const InvoicesNav = () => {
           <NavLink to="/invoice/InvoiceTemplate">Invoice Template</NavLink>
           <NavLink to="/invoice/DemoInvoice">Demo Invoice</NavLink>
 
-     
+
         </Box>
       </Box>
       <Box sx={{ pt: 5 }}>
-        <Outlet/>
+        <Outlet />
       </Box>
     </Box>
   );

@@ -1,7 +1,5 @@
-import {
-    useState,
-    useEffect
-} from "react";
+import { useState, useEffect } from "react";
+
 import {
     Box,
     IconButton,
@@ -22,7 +20,7 @@ import DensitySmallIcon from '@mui/icons-material/DensitySmall';
 import LogoutIcon from '@mui/icons-material/Logout';
 import "./sidebar.css";
 import { menuItems } from "../Components/menuItems";
-import logo from '../imgs/companyLogo.png';
+// import logo from '../imgs/companyLogo.png';
 // import logonew from '../imgs/logo.png';
 import logonew from '../imgs/LogoFour.png';
 import user from '../imgs/user.png';
@@ -34,7 +32,7 @@ import LogoOne from "../imgs/LogoThree.png"
 
 function Sidebar() {
     const API_URL = process.env.REACT_APP_URL
-    console.log(API_URL)
+    // console.log(API_URL)
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
     const [isCollapsed, setIsCollapsed] = useState(false);
@@ -44,6 +42,8 @@ function Sidebar() {
     const [orgData, setOrgData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [userName, setUserName] = useState("");
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -55,7 +55,7 @@ function Sidebar() {
                     throw new Error("Failed to fetch organization data");
                 }
                 const data = await response.json();
-                console.log(data)
+                // console.log(data)
                 setOrgData(data[0]);
             } catch (err) {
                 setError(err.message);
@@ -65,9 +65,26 @@ function Sidebar() {
         };
 
         fetchOrgData();
+
     }, [API_URL]);
 
+    //fetch username${API_URL}
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await fetch(`${API_URL}/users/signup/`);
+                const data = await response.json();
 
+                // Extract username
+                setUserName(data.getalluser[0].userName);
+
+            } catch (err) {
+                console.log(err);
+            }
+        };
+
+        fetchUsers();
+    }, []);
 
     const handleToggleSidebar = () => {
         if (isSmallScreen) {
@@ -142,16 +159,7 @@ function Sidebar() {
                                         }}>
                                             <b>{orgData.SocietyName}</b>
                                         </Typography>
-                                        {/* <Chip
-                                            label={orgData.Registration}
-                                            sx={{
-                                                fontSize: { sm: '0.6rem' },
-                                                backgroundColor: "#25D366",
-                                                color: "#fff",
-                                           
-                                                height: { xs: "20px", sm: "16px" },
-                                            }}
-                                        /> */}
+
                                         <Chip
                                             label={orgData.Registration}
                                             sx={{
@@ -235,26 +243,13 @@ function Sidebar() {
                         transition: "width 0.3s",
                     }}
                 >
-                    {/* <Box sx={{ pt: 3, display: "flex", alignItems: "center", justifyContent: "start", gap: 1 }}>
-                        <div style={{ textAlign: "center" }}>
-                            <img
-                                src={isCollapsed ? logonew : LogoOne}
-                                alt="logo"
-                                style={{ height: "50px", margin: "0 auto", width: isCollapsed ? "50px" : "auto" }}
-                            />
-                        </div>
-                        {!isCollapsed && <Typography variant="h5" className="company-name-text"></Typography>}
-                    </Box> */}
-
-
 
                     <div
                         style={{
                             display: "flex",
                             justifyContent: "center",
                             alignItems: "center",
-                            //  height: "250px",
-                            //  backgroundColor: "#053e64",
+
                             borderRadius: "10px",
                             overflow: "hidden",
 
@@ -270,28 +265,7 @@ function Sidebar() {
                             }}
                         />
                     </div>
-                    {/* <div
-  style={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-     height: "120px",
-    // backgroundColor: "#053e64",
-    // borderRadius: "10px",
-    overflow: "hidden",
-   
-  }}
->
-  <img
-    src={isCollapsed ? logonew : LogoOne}
-    alt="logo"
-    style={{
-      height: isCollapsed ? "70px" : "220px",
-      width: "auto",
-      objectFit: "contain"
-    }}
-  />
-</div> */}
+
 
 
 
@@ -309,7 +283,7 @@ function Sidebar() {
                                             transition: "background-color 0.3s, color 0.3s",
                                             "&:hover": {
                                                 color: "#fff",
-                                                // backgroundColor: "#2c85de",
+
                                                 backgroundColor: "#1b90bb",
                                                 ".menu-icon": {
                                                     color: "#fff",
@@ -387,7 +361,7 @@ function Sidebar() {
                                 {!isCollapsed && (
                                     <Box>
                                         <Typography variant="subtitle2" fontWeight="bold">
-                                            Chavan Diksha
+                                            {userName}
                                         </Typography>
                                         <Typography variant="caption" color="textSecondary">
                                             Admin
