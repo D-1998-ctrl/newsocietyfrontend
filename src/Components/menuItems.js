@@ -7,11 +7,11 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import SummarizeIcon from '@mui/icons-material/Summarize';
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt';
 import PaymentsIcon from '@mui/icons-material/Payments';
-
+import SettingsIcon from '@mui/icons-material/Settings';
 export const menuItems = [
   {
     title: "Dashboard",
-    path: "/dashboard",
+    path: "dashboard",
     icon: <DashboardCustomizeRoundedIcon />,
     submenus: [],
   },
@@ -19,14 +19,14 @@ export const menuItems = [
 
   {
     title: "Ledgers",
-    path: '/ledgers',
+    path: 'ledgers',
     icon: <PersonAddAltIcon />,
   },
 
 
   {
     title: "Members",
-    path: '/members',
+    path: 'members',
     icon: <GroupIcon />,
   },
 
@@ -37,30 +37,30 @@ export const menuItems = [
     submenus: [
       {
         title: "Organization",
-        path: "/organization",
+        path: "app/organization",
         icon: <FiberManualRecordIcon sx={{ fontSize: 15 }} />,
       },
 
     ],
   },
 
-    {
+  {
     title: "Vouchers",
-    path: '/voucher/journalvouchers',
+    path: '/app/voucher/journalvouchers',
     icon: <PaymentsIcon />,
     submenus: [],
   },
 
   {
     title: "Invoice",
-    path: '/invoice/billinvoice',
+    path: '/app/invoice/billinvoice',
     icon: <ReceiptIcon />,
     submenus: [],
   },
 
   {
     title: "Audit Template",
-    path: '/auditTemplate',
+    path: '/app/auditTemplate',
     icon: <DescriptionIcon />,
   },
 
@@ -71,23 +71,31 @@ export const menuItems = [
     submenus: [
       {
         title: "Profit & Loss",
-        path: "/profitloss",
+        path: "/app/profitloss",
         icon: <FiberManualRecordIcon sx={{ fontSize: 15 }} />,
       },
 
-       {
+      {
         title: "Trial Balance",
-        path: "/trialbalance",
+        path: "/app/trialbalance",
         icon: <FiberManualRecordIcon sx={{ fontSize: 15 }} />,
       },
 
       {
         title: "Audit Report",
-        path: "/auditreport",
+        path: "/app/auditreport",
         icon: <FiberManualRecordIcon sx={{ fontSize: 15 }} />,
       },
 
     ],
   },
+
+
+  {
+    title: "Settings",
+    path: 'settings',
+    icon: <SettingsIcon />,
+  },
+
 
 ];

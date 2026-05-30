@@ -33,10 +33,10 @@ const InvoicesNav = () => {
             }
           }}
         >
-          <NavLink to="/invoice/billinvoice">Bill Invoice</NavLink>
-          <NavLink to="/invoice/CreateService">Create Service</NavLink>
-          <NavLink to="/invoice/InvoiceTemplate">Invoice Template</NavLink>
-          <NavLink to="/invoice/DemoInvoice">Demo Invoice</NavLink>
+          <NavLink to="billinvoice">Bill Invoice</NavLink>
+          <NavLink to="CreateService">Create Service</NavLink>
+          <NavLink to="InvoiceTemplate">Invoice Template</NavLink>
+          <NavLink to="DemoInvoice">Demo Invoice</NavLink>
 
 
         </Box>

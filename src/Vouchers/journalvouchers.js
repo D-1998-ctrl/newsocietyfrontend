@@ -1,6 +1,6 @@
 
-import { useState, useEffect, useMemo, useRef } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Autocomplete, useMediaQuery, Box, Button, Typography, TextField, Drawer, Divider, Table, TableBody, TableCell, TableHead, TableRow,  } from '@mui/material';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Autocomplete, useMediaQuery, Box, Button, Typography, TextField, Drawer, Divider, Table, TableBody, TableCell, TableHead, TableRow, } from '@mui/material';
 import { MaterialReactTable, useMaterialReactTable, } from 'material-react-table';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTheme } from "@mui/material/styles";
@@ -16,9 +16,12 @@ import axios from 'axios';
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
+import Cookies from "js-cookie";
+
 
 const Journalvouchers = () => {
   const REACT_APP_URL = process.env.REACT_APP_URL
+  const societyId = Cookies.get("societyId");
   const theme = useTheme();
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -48,10 +51,10 @@ const Journalvouchers = () => {
   // const [date, setDate] = useState(null);
   const [date, setDate] = useState(new Date());
 
-  const fetchDebitLedger = async () => {
+  const fetchDebitLedger = useCallback(async () => {
     try {
       const response = await fetch(
-        `${REACT_APP_URL}/Account`
+        `${REACT_APP_URL}/Account/society/${societyId}`
       );
       const result = await response.json();
 
@@ -67,16 +70,16 @@ const Journalvouchers = () => {
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
-  };
+  }, [REACT_APP_URL, societyId]);
 
   const [crLedOption, setCrLedOption] = useState([]);
   const [selectedCrLedOption, setSelectedCrLedOption] = useState('');
 
 
-  const fetchCrLedger = async () => {
+  const fetchCrLedger = useCallback(async () => {
     try {
       const response = await fetch(
-        `${REACT_APP_URL}/Account`
+        `${REACT_APP_URL}/Account/society/${societyId}`
       );
       const result = await response.json();
 
@@ -91,7 +94,7 @@ const Journalvouchers = () => {
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
-  };
+  }, [REACT_APP_URL, societyId]);
 
 
   //create annd update  Invoice 
@@ -112,14 +115,15 @@ const Journalvouchers = () => {
 
       if (JvId) {
         await axios.put(
-          `${REACT_APP_URL}/JournalVoucher/${JvId}`,
+
+          `${REACT_APP_URL}/JournalVoucher/society/${societyId}/jv/${JvId}`,
           JournalVoucherData
         );
 
         toast.success("Journal Voucher updated successfully!");
       } else {
         await axios.post(
-          `${REACT_APP_URL}/JournalVoucher`,
+          `${REACT_APP_URL}/JournalVoucher/society/${societyId}`,
           JournalVoucherData
         );
 
@@ -150,8 +154,8 @@ const Journalvouchers = () => {
   //get header
   const [JVData, setJVData] = useState([]);
 
-  const getJV = () => {
-    const url = `${REACT_APP_URL}/JournalVoucher`;
+  const getJV = useCallback(async (e) => {
+    const url = `${REACT_APP_URL}/JournalVoucher/society/${societyId}`;
     // console.log(" URL:", url);
     const requestOptions = {
       method: "GET",
@@ -165,7 +169,26 @@ const Journalvouchers = () => {
 
       })
       .catch((error) => console.error(error));
-  };
+  }, [REACT_APP_URL, societyId]);
+
+
+  //for org data 
+  const [orgData, setOrgData] = useState(null);
+  const fetchOrgData = useCallback(async () => {
+    try {
+      const response = await fetch(`${REACT_APP_URL}/Organisation/${societyId}`);
+      // console.log("URL:", `${REACT_APP_URL}/Organisation/${societyId}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch organization data");
+      }
+
+      const data = await response.json();
+      // console.log(data);
+      setOrgData(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  },[REACT_APP_URL,societyId]);
 
   useEffect(() => {
     fetchDebitLedger();
@@ -173,7 +196,7 @@ const Journalvouchers = () => {
     getJV();
     fetchOrgData()
 
-  }, []);
+  }, [fetchDebitLedger, fetchCrLedger, getJV, fetchOrgData]);
 
 
   const [previewData, setPreviewData] = useState(null);
@@ -277,7 +300,6 @@ const Journalvouchers = () => {
 
   const handleEdit = async (rowData) => {
     // console.log("This row has been clicked:", rowData);
-
     setIsEditing(true);
     setJVId(rowData._id);
     setDate(rowData.date);
@@ -328,29 +350,14 @@ const Journalvouchers = () => {
   const totalDebit = previewData?.debitAmount || 0;
   const totalCredit = previewData?.creditAmount || 0;
 
-  //for org data 
-  const [orgData, setOrgData] = useState(null);
-  const fetchOrgData = async () => {
-    try {
-      const response = await fetch(`${REACT_APP_URL}/Organisation/`);
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch organization data");
-      }
-
-      const data = await response.json();
-      // console.log(data);
-      setOrgData(data[0]);
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
 
   //delete JV
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const handleDeleteTemp = () => {
-    const url = `${REACT_APP_URL}/JournalVoucher/${JvId}`;
+    const url = `${REACT_APP_URL}/JournalVoucher/society/${societyId}/jv/${JvId}`
+
 
     fetch(url, { method: "DELETE" })
       .then((response) => response.json())
@@ -421,7 +428,7 @@ const Journalvouchers = () => {
 
 
                 <DialogTitle sx={{ textAlign: "center", fontWeight: 700, borderBottom: "1px solid black", }}>
-                 Journal Voucher
+                  Journal Voucher
                 </DialogTitle>
 
 
@@ -554,7 +561,7 @@ const Journalvouchers = () => {
         <Box>
           <Box sx={{ padding: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: '#ecfbfd' }}>
 
-            <Typography m={2} fontWeight="bold" variant="h6"  color='var(--primary-color)'>
+            <Typography m={2} fontWeight="bold" variant="h6" color='var(--primary-color)'>
               {isEditing ? "Update Journal Vouchers" : "Create Journal Vouchers"}
             </Typography>
             <CloseIcon sx={{ cursor: 'pointer' }} onClick={handleDrawerClose} />
@@ -735,7 +742,7 @@ const Journalvouchers = () => {
           <Box display={'flex'} alignItems={'center'} justifyContent={'center'} gap={2} mt={5} mb={5}>
             <Box>
               <Button
-                sx={{ background: 'var(--secondary-color)', color: '#ffffff',fontWeight:'bold' }}
+                sx={{ background: 'var(--secondary-color)', color: '#ffffff', fontWeight: 'bold' }}
                 onClick={handleSubmit}
                 variant="contained"
               >

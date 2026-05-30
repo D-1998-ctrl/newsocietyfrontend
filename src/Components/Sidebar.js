@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import Cookies from "js-cookie";
 import {
     Box,
     IconButton,
@@ -47,26 +47,55 @@ function Sidebar() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchOrgData = async () => {
-            try {
-                const response = await fetch(`${API_URL}/Organisation/`);
+    const fetchOrgData = async () => {
+        try {
+            const societyId = Cookies.get("societyId");
 
-                if (!response.ok) {
-                    throw new Error("Failed to fetch organization data");
-                }
-                const data = await response.json();
-                // console.log(data)
-                setOrgData(data[0]);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
+            if (!societyId) {
+                console.log("No society selected");
+                return;
             }
-        };
 
-        fetchOrgData();
+            const response = await fetch(`${API_URL}/Organisation/${societyId}`);
 
-    }, [API_URL]);
+            if (!response.ok) {
+                throw new Error("Failed to fetch organization data");
+            }
+
+            const data = await response.json();
+
+            setOrgData(data); // ✅ now correct society
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    fetchOrgData();
+}, [API_URL]);
+
+    // useEffect(() => {
+    //     const fetchOrgData = async () => {
+    //         try {
+    //             const response = await fetch(`${API_URL}/Organisation/`);
+
+    //             if (!response.ok) {
+    //                 throw new Error("Failed to fetch organization data");
+    //             }
+    //             const data = await response.json();
+    //             // console.log(data)
+    //             setOrgData(data[0]);
+    //         } catch (err) {
+    //             setError(err.message);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     fetchOrgData();
+
+    // }, [API_URL]);
 
     //fetch username${API_URL}
     useEffect(() => {

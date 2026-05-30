@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef,useCallback,} from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Autocomplete, useMediaQuery, Box, Button, Typography, TextField, Drawer, Divider, } from '@mui/material';
 import { MaterialReactTable, useMaterialReactTable, } from 'material-react-table';
 import CloseIcon from '@mui/icons-material/Close';
@@ -15,9 +15,11 @@ import axios from 'axios';
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
+import Cookies from "js-cookie";
 
 const ContraVoucher = () => {
   const REACT_APP_URL = process.env.REACT_APP_URL
+  const societyId = Cookies.get("societyId");
   const theme = useTheme();
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -53,9 +55,9 @@ const ContraVoucher = () => {
 
   const [date, setDate] = useState(new Date());
 
-  const fetchDebitLedger = async () => {
+  const fetchDebitLedger =useCallback( async () => {
     try {
-      const response = await fetch(`${REACT_APP_URL}/Account`);
+      const response = await fetch(`${REACT_APP_URL}/Account/society/${societyId}`);
       const result = await response.json();
 
       // console.log("ledger info:", result);
@@ -71,14 +73,14 @@ const ContraVoucher = () => {
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
-  };
+  },[REACT_APP_URL,societyId]);
 
   const [crLedOption, setCrLedOption] = useState([]);
   const [selectedCrLedOption, setSelectedCrLedOption] = useState('');
 
-  const fetchCrLedger = async () => {
+  const fetchCrLedger =useCallback( async () => {
     try {
-      const response = await fetch(`${REACT_APP_URL}/Account`);
+      const response = await fetch(`${REACT_APP_URL}/Account/society/${societyId}`);
       const result = await response.json();
 
       // console.log("ledger info:", result);
@@ -94,7 +96,7 @@ const ContraVoucher = () => {
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
-  };
+  },[REACT_APP_URL,societyId]);
 
 
   //  transactionType
@@ -132,14 +134,14 @@ const ContraVoucher = () => {
 
       if (contraId) {
         await axios.put(
-          `${REACT_APP_URL}/ContraVoucher/${contraId}`,
+          `${REACT_APP_URL}/contraVoucher/society/${societyId}/contra/${contraId}`,
           ContraVoucherData
         );
 
         toast.success("Contra Voucher updated successfully!");
       } else {
         await axios.post(
-          `${REACT_APP_URL}/ContraVoucher`,
+          `${REACT_APP_URL}/contraVoucher/society/${societyId}`,
           ContraVoucherData
         );
 
@@ -174,8 +176,8 @@ const ContraVoucher = () => {
   //get header
   const [contraData, setContraData] = useState([]);
 
-  const getContraVoucher = () => {
-    const url = `${REACT_APP_URL}/ContraVoucher`;
+  const getContraVoucher =useCallback( () => {
+    const url = `${REACT_APP_URL}/contraVoucher/society/${societyId}`;
     // console.log(" URL:", url);
     const requestOptions = {
       method: "GET",
@@ -189,7 +191,26 @@ const ContraVoucher = () => {
 
       })
       .catch((error) => console.error(error));
-  };
+  },[REACT_APP_URL,societyId]);
+
+
+    //for org data 
+  const [orgData, setOrgData] = useState(null);
+  const fetchOrgData = useCallback( async () => {
+    try {
+      const response = await fetch(`${REACT_APP_URL}/Organisation/${societyId}`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch organization data");
+      }
+
+      const data = await response.json();
+      // console.log(data);
+      setOrgData(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  },[REACT_APP_URL,societyId]);
 
   useEffect(() => {
     fetchDebitLedger();
@@ -197,7 +218,7 @@ const ContraVoucher = () => {
     getContraVoucher();
     fetchOrgData()
 
-  }, []);
+  }, [fetchDebitLedger,fetchCrLedger,getContraVoucher,fetchOrgData]);
 
   const [previewData, setPreviewData] = useState(null);
 
@@ -387,29 +408,13 @@ const ContraVoucher = () => {
     pdf.save(`ContraVoucher${CVNo}.pdf`);
   };
 
-  //for org data 
-  const [orgData, setOrgData] = useState(null);
-  const fetchOrgData = async () => {
-    try {
-      const response = await fetch(`${REACT_APP_URL}/Organisation/`);
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch organization data");
-      }
-
-      const data = await response.json();
-      // console.log(data);
-      setOrgData(data[0]);
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
 
   //delete JV
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const handleDeleteTemp = () => {
-    const url = `${REACT_APP_URL}/ContraVoucher/${contraId}`;
+    const url = `${REACT_APP_URL}/contraVoucher/society/${societyId}/contra/${contraId}`;
 
     fetch(url, { method: "DELETE" })
       .then((response) => response.json())
@@ -623,7 +628,7 @@ const ContraVoucher = () => {
           </Button>
 
 
-          <Button sx={{fontWeight:'bold' ,borderColor: 'var(--secondary-color)', color: 'var(--secondary-color)', fontWeight: 600, }} variant="outlined" onClick={() => setOpenPreview(false)}>
+          <Button sx={{ borderColor: 'var(--secondary-color)', color: 'var(--secondary-color)', fontWeight: 600, }} variant="outlined" onClick={() => setOpenPreview(false)}>
             Close
           </Button>
 

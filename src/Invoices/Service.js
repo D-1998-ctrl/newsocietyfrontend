@@ -1,15 +1,17 @@
 
-import { useState, useEffect, useMemo } from 'react'
-import { FormControl, Select, MenuItem, InputLabel, Divider, TextField, Button, Box, Typography, Drawer, useMediaQuery, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { useState, useEffect, useMemo,useCallback } from 'react'
+import { FormControl, Select, MenuItem, Divider, TextField, Button, Box, Typography, Drawer, useMediaQuery, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { useTheme } from "@mui/material/styles";
 import CloseIcon from '@mui/icons-material/Close';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 import { toast } from "react-toastify";
 import { MaterialReactTable, useMaterialReactTable, } from 'material-react-table';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Cookies from "js-cookie";
 
 const Service = () => {
-  const REACT_APP_URL = process.env.REACT_APP_URL
+  const REACT_APP_URL = process.env.REACT_APP_URL;
+   const societyId = Cookies.get("societyId");
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -54,8 +56,8 @@ const Service = () => {
 
 
       const url = serviceId
-        ? `${REACT_APP_URL}/service/${serviceId}`
-        : `${REACT_APP_URL}/service/`;
+        ? `${REACT_APP_URL}/Service/society/${societyId}/services/${serviceId}`
+        : `${REACT_APP_URL}/Service/society/${societyId}`;
 
 
       const response = await fetch(url, requestOptions);
@@ -64,11 +66,11 @@ const Service = () => {
         throw new Error("Failed to save template");
       }
 
-      const result = await response.json();
+      // const result = await response.json();
       // console.log("API Result:", result);
       setIsDrawerOpen(false);
       toast.success(serviceId ? " Services updated successfully!" : " Services created successfully!");
-      getAuditTemp()
+      getServiceData()
       resetForm();
 
 
@@ -81,8 +83,8 @@ const Service = () => {
 
   //get all temp
   const [serviceData, setServiceData] = useState([]);
-  const getAuditTemp = () => {
-    const url = `${REACT_APP_URL}/service`;
+  const getServiceData = useCallback( () => {
+    const url = `${REACT_APP_URL}/Service/society/${societyId}`;
     // console.log(" URL:", url);
     const requestOptions = {
       method: "GET",
@@ -92,15 +94,15 @@ const Service = () => {
       .then((response) => response.json())
       .then(data => {
         // console.log('data', data);
-        setServiceData(data.data);
+        setServiceData(data);
 
       })
       .catch((error) => console.error(error));
-  };
+  },[REACT_APP_URL,societyId]);
 
   useEffect(() => {
-    getAuditTemp()
-  }, []);
+    getServiceData()
+  }, [getServiceData]);
 
 
   const columns = useMemo(() => {
@@ -179,14 +181,14 @@ const Service = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const handleDeleteTemp = () => {
-    const url = `${REACT_APP_URL}/service/${serviceId}`;
+    const url = `${REACT_APP_URL}/Service/society/${societyId}/services/${serviceId}`;
 
     fetch(url, { method: "DELETE" })
       .then((response) => response.json())
       .then((data) => {
         //console.log('data',data)
         toast.success(`${servicename} deleted successfully!`);
-        getAuditTemp();
+        getServiceData();
         handleDrawerClose();
         resetForm();
       })

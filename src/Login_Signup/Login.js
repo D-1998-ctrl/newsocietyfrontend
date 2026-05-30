@@ -7,7 +7,7 @@ import "./signup.css";
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import img from "../imgs/img.jpg"
+// import img from "../imgs/img.jpg"
 
 const LoginPage = () => {
   const REACT_APP_URL = process.env.REACT_APP_URL
@@ -76,7 +76,8 @@ const handleOkClick = async () => {
     console.log("Cookies:", payload);
 
     toast.success("Login Successful");
-    navigate('/dashboard');
+     navigate('/societyList');
+   
 
   } catch (error) {
     console.log("Full Error:", error);

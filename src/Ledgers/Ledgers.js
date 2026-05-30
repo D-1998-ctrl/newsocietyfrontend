@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useMemo, } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Select, MenuItem, FormControl, RadioGroup, FormControlLabel, Radio, Autocomplete, useMediaQuery, Box, Button, Typography, TextField, Drawer, Divider, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { MaterialReactTable, useMaterialReactTable, } from 'material-react-table';
 import CloseIcon from '@mui/icons-material/Close';
@@ -10,9 +10,11 @@ import "react-toastify/dist/ReactToastify.css";
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import Cookies from "js-cookie";
 
 const Ledgers = () => {
     const REACT_APP_URL = process.env.REACT_APP_URL
+    const societyId = Cookies.get("societyId");
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -22,52 +24,7 @@ const Ledgers = () => {
     const [debitCredit, setDebitCredit] = useState('DR');
     const [typeCode, setTypeCode] = useState('');
 
-    //fetch Group
-    const [groupOption, setGroupOption] = useState([]);
-    const [selectedGroupOption, setSelectedGroupOption] = useState('');
 
-    const fetchGroups = async () => {
-        try {
-            const response = await fetch(
-                `${REACT_APP_URL}/AccountGroup`
-            );
-            const result = await response.json();
-
-            // console.log("ledger info:", result);
-
-            const options = result.map((groupAcc) => ({
-                value: groupAcc._id,
-                label: groupAcc.groupName
-            }));
-
-            setGroupOption(options);
-        } catch (error) {
-            console.error("Error fetching accounts:", error);
-        }
-    };
-
-    const [subgroupOptions, setSubGruopOption] = useState([])
-    const [selectedSubGroupOption, setselectedSubGroupOption] = useState('')
-
-    const fetchSubGroups = async () => {
-        try {
-            const response = await fetch(
-                `${REACT_APP_URL}/AccountSubGroup/subgroups/`
-            );
-            const result = await response.json();
-
-            // console.log("ledger info:", result);
-
-            const options = result.map((subgroupAcc) => ({
-                value: subgroupAcc._id,
-                label: subgroupAcc.subgroupName
-            }));
-
-            setSubGruopOption(options);
-        } catch (error) {
-            console.error("Error fetching accounts:", error);
-        }
-    };
 
     const handleDrawerOpen = () => {
         setIsDrawerOpen(true);
@@ -83,9 +40,9 @@ const Ledgers = () => {
 
     //get Account
     const [accountData, setAccountData] = useState([]);
-    const fetchAccountData = async () => {
+    const fetchAccountData = useCallback(async () => {
         try {
-            const response = await fetch(`${REACT_APP_URL}/Account/`);
+            const response = await fetch(`${REACT_APP_URL}/Account/society/${societyId}`);
 
             if (!response.ok) {
                 throw new Error("Failed to fetch organization data");
@@ -97,7 +54,7 @@ const Ledgers = () => {
         } catch (err) {
             console.error(err.message);
         }
-    };
+    }, [REACT_APP_URL, societyId]);
 
     const [accountId, setAccountId] = useState('')
 
@@ -130,11 +87,11 @@ const Ledgers = () => {
                 size: 150,
             },
 
-            {
-                accessorKey: 'groupId.groupName',
-                header: 'GroupName Name',
-                size: 150,
-            },
+            // {
+            //     accessorKey: 'groupId.groupName',
+            //     header: 'GroupName Name',
+            //     size: 150,
+            // },
 
             {
                 accessorKey: 'opening',
@@ -182,11 +139,12 @@ const Ledgers = () => {
     //create and update Account
     const handleSubmit = async () => {
         try {
-            const url = isEditing
-                ? `${REACT_APP_URL}/Account/${accountId}`
-                : `${REACT_APP_URL}/Account`;
 
-            const method = isEditing ? "PATCH" : "POST";
+            const url = isEditing
+                ? `${REACT_APP_URL}/Account/society/${societyId}/ledgers/${accountId}`
+                : `${REACT_APP_URL}/Account/society/${societyId}`;
+
+            const method = isEditing ? "PUT" : "POST";
 
             const accountData = {
                 accountName: accountName,
@@ -231,7 +189,7 @@ const Ledgers = () => {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
     const handleDeleteTemp = () => {
-        const url = `${REACT_APP_URL}/Account/${accountId}`;
+        const url = `${REACT_APP_URL}/Account/society/${societyId}/ledgers/${accountId}`;
 
         fetch(url, { method: "DELETE" })
             .then((response) => response.json())
@@ -252,13 +210,58 @@ const Ledgers = () => {
         handleDeleteTemp();
         setOpenDeleteDialog(false);
     };
+    //fetch Group
+    const [groupOption, setGroupOption] = useState([]);
+    const [selectedGroupOption, setSelectedGroupOption] = useState('');
 
+    const fetchGroups = useCallback(async () => {
+        try {
+            const response = await fetch(
+                `${REACT_APP_URL}/AccountGroup/`
+            );
+            const result = await response.json();
+
+            // console.log("ledger info:", result);
+
+            const options = result.map((groupAcc) => ({
+                value: groupAcc._id,
+                label: groupAcc.groupName
+            }));
+
+            setGroupOption(options);
+        } catch (error) {
+            console.error("Error fetching accounts:", error);
+        }
+    }, [REACT_APP_URL]);
+
+    const [subgroupOptions, setSubGruopOption] = useState([])
+    const [selectedSubGroupOption, setselectedSubGroupOption] = useState('')
+
+    const fetchSubGroups = useCallback(async () => {
+        try {
+            const response = await fetch(
+                `${REACT_APP_URL}/AccountSubGroup/subgroups/`
+            );
+            const result = await response.json();
+
+            // console.log("ledger info:", result);
+
+            const options = result.map((subgroupAcc) => ({
+                value: subgroupAcc._id,
+                label: subgroupAcc.subgroupName
+            }));
+
+            setSubGruopOption(options);
+        } catch (error) {
+            console.error("Error fetching accounts:", error);
+        }
+    }, [REACT_APP_URL]);
     useEffect(() => {
         fetchAccountData()
         fetchGroups()
         fetchSubGroups()
 
-    }, []);
+    }, [fetchAccountData,fetchGroups,fetchSubGroups]);
 
     const resetForm = () => {
         setAccountName('')
@@ -281,7 +284,7 @@ const Ledgers = () => {
             redirect: "follow"
         };
 
-        fetch(`${REACT_APP_URL}/Voucher/ledger/${accountId}`, requestOptions)
+        fetch(`${REACT_APP_URL}/Voucher/society/${societyId}/ledger/${accountId}`, requestOptions)
             .then((response) => response.json())
             .then((result) => {
                 // console.log(result);
@@ -714,10 +717,10 @@ const Ledgers = () => {
                             <Button
                                 sx={{
                                     // background: '#10370d', color: '#ffffff' 
-                                     background: 'var(--secondary-color)',
-                                    
+                                    background: 'var(--secondary-color)',
+
                                     color: '#fff',
-                                    fontWeight:'bold'
+                                    fontWeight: 'bold'
                                 }}
                                 onClick={handleSubmit}
                                 variant="contained"
@@ -729,11 +732,11 @@ const Ledgers = () => {
                         <Box>
                             {isEditing && (
                                 <Button
-                                    sx={{ 
-                                       background: 'var(--secondary-color)',
+                                    sx={{
+                                        background: 'var(--secondary-color)',
                                         color: '#ffffff',
-                                        fontWeight:'bold'
-                                     }}
+                                        fontWeight: 'bold'
+                                    }}
                                     onClick={getVoucherByLedgerId}
                                     variant="contained"
                                 > <EventNoteIcon /> show entries

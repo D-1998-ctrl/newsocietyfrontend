@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useMemo, } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { FormControl, RadioGroup, FormControlLabel, Radio, Autocomplete, useMediaQuery, Box, Button, Typography, TextField, Drawer, Divider, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import { MaterialReactTable, useMaterialReactTable, } from 'material-react-table';
 import CloseIcon from '@mui/icons-material/Close';
@@ -12,9 +12,11 @@ import { toast } from "react-toastify";
 import DeleteIcon from '@mui/icons-material/Delete';
 import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios';
+import Cookies from "js-cookie";
 
 const Member = () => {
   const REACT_APP_URL = process.env.REACT_APP_URL
+  const societyId = Cookies.get("societyId");
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -43,10 +45,11 @@ const Member = () => {
   const [ledgerOption, setLedgerOption] = useState([]);
   const [selectedLedgerOption, setSelectedLedgerOption] = useState('');
 
-  const fetchLedgers = async () => {
+  const fetchLedgers = useCallback(async () => {
     try {
       const response = await fetch(
-        `${REACT_APP_URL}/Account`
+        // `${REACT_APP_URL}/Account`
+        `${REACT_APP_URL}/Account/society/${societyId}`
       );
       const result = await response.json();
 
@@ -61,12 +64,12 @@ const Member = () => {
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
-  };
+  }, [REACT_APP_URL,societyId]);
 
   //fetch wing
   const [wingOptions, setWingOptions] = useState([]);
   const [selectedWing, setSelectedWing] = useState(null);
-  const fetchWings = async () => {
+  const fetchWings = useCallback(async () => {
     try {
       const response = await axios.get(
         `${REACT_APP_URL}/wings/`,
@@ -76,7 +79,7 @@ const Member = () => {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, [REACT_APP_URL]);
 
   const processWingData = (data) => {
     if (Array.isArray(data)) {
@@ -99,15 +102,15 @@ const Member = () => {
   const [chargesTempOption, setChargesTempOption] = useState([]);
   const [selectedChargesTempOption, setSelectedChargesTempOption] = useState('');
 
-  const fetchChargesTemp = async () => {
+  const fetchChargesTemp = useCallback(async () => {
     try {
-      const response = await fetch(`${REACT_APP_URL}/service`);
+      const response = await fetch(`${REACT_APP_URL}/Service/society/${societyId}`);
       const result = await response.json();
 
-      // console.log("service info:", result);
+       console.log("service info:", result);
 
-      if (result?.data && Array.isArray(result.data)) {
-        const options = result.data.map((service) => ({
+      if (Array.isArray(result)) {
+        const options = result.map((service) => ({
           value: service._id,
           label: service.name,
         }));
@@ -117,21 +120,21 @@ const Member = () => {
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
-  };
+  }, [REACT_APP_URL,societyId]);
 
   //fetch supplementary charges temp
   const [supplementaryChargesTempOption, setSupplementaryChargesTempOption] = useState([]);
   const [selectedSupplementaryChargesTempOption, setSelectedSupplementaryChargesTempOption] = useState('');
 
-  const fetchSupplementaryChargesTemp = async () => {
+  const fetchSupplementaryChargesTemp = useCallback(async () => {
     try {
-      const response = await fetch(`${REACT_APP_URL}/service`);
+      const response = await fetch(`${REACT_APP_URL}/Service/society/${societyId}`);
       const result = await response.json();
 
       // console.log("service info:", result);
 
-      if (result?.data && Array.isArray(result.data)) {
-        const options = result.data.map((service) => ({
+      if (Array.isArray(result)) {
+        const options = result.map((service) => ({
           value: service._id,
           label: service.name,
         }));
@@ -142,15 +145,7 @@ const Member = () => {
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
-  };
-
-  useEffect(() => {
-    fetchMemberData()
-    fetchLedgers()
-    fetchWings()
-    fetchChargesTemp()
-    fetchSupplementaryChargesTemp()
-  }, []);
+  }, [REACT_APP_URL,societyId]);
 
   const handleDrawerOpen = () => {
     setIsDrawerOpen(true); setIsEditing(false);
@@ -165,22 +160,25 @@ const Member = () => {
 
   //get member
   const [memberData, setMemberData] = useState([]);
-  const fetchMemberData = async () => {
+
+  const fetchMemberData = useCallback(async () => {
     try {
-      const response = await fetch(`${REACT_APP_URL}/Member/`);
+      // const societyId = Cookies.get("societyId");
+
+      const response = await fetch(
+        `${REACT_APP_URL}/Member/society/${societyId}`
+      );
 
       if (!response.ok) {
-        throw new Error("Failed to fetch organization data");
+        throw new Error("Failed to fetch member data");
       }
 
       const data = await response.json();
-      // console.log(data);
       setMemberData(data);
     } catch (err) {
       console.error(err.message);
     }
-  };
-
+  }, [REACT_APP_URL, societyId]);
   const [memberId, setMemberId] = useState('');
 
   const handleEdit = async (rowData) => {
@@ -364,9 +362,11 @@ const Member = () => {
   //create and update member
   const handleSubmit = async () => {
     try {
+      // const societyId = Cookies.get("societyId");
       const url = isEditing
-        ? `${REACT_APP_URL}/Member/${memberId}`
-        : `${REACT_APP_URL}/Member`;
+        ? `${REACT_APP_URL}/Member/society/${societyId}/members/${memberId}`
+        : `${REACT_APP_URL}/Member/society/${societyId}`;
+
 
       const method = isEditing ? "PUT" : "POST";
 
@@ -433,7 +433,7 @@ const Member = () => {
           typeCode: "Balance Sheet"
         };
 
-        const accountResponse = await fetch(`${REACT_APP_URL}/Account`, {
+        const accountResponse = await fetch(`${REACT_APP_URL}/Account/society/${societyId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -489,14 +489,13 @@ const Member = () => {
 
   //delete member
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
   const handleDeleteTemp = () => {
-    const url = `${REACT_APP_URL}/Member/${memberId}`;
+
+    const url = `${REACT_APP_URL}/Member/society/${societyId}/members/${memberId}`;
 
     fetch(url, { method: "DELETE" })
       .then((response) => response.json())
       .then((data) => {
-        //console.log('data',data)
         toast.success(`${memberName} deleted successfully!`);
         fetchMemberData();
         handleDrawerClose();
@@ -504,7 +503,7 @@ const Member = () => {
       })
       .catch((error) => {
         console.error(error);
-        toast.error("Failed to delete template");
+        toast.error("Failed to delete member");
       });
   };
 
@@ -512,6 +511,14 @@ const Member = () => {
     handleDeleteTemp();
     setOpenDeleteDialog(false);
   };
+
+  useEffect(() => {
+    fetchMemberData()
+    fetchLedgers()
+    fetchWings()
+    fetchChargesTemp()
+    fetchSupplementaryChargesTemp()
+  }, [fetchMemberData, fetchLedgers, fetchWings, fetchChargesTemp, fetchSupplementaryChargesTemp]);
 
   return (
     <Box mt={2}>

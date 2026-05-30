@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef,useCallback} from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Autocomplete, useMediaQuery, Box, Button, Typography, TextField, Drawer, Divider, Table, TableBody, TableCell, TableContainer, TableHead, TableRow,  } from '@mui/material';
 import { MaterialReactTable, useMaterialReactTable, } from 'material-react-table';
 import CloseIcon from '@mui/icons-material/Close';
@@ -15,9 +15,11 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import axios from 'axios';
 import jsPDF from "jspdf";
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
+import Cookies from "js-cookie";
 
-const Journalvouchers = () => {
+const Receiptvouchers = () => {
   const REACT_APP_URL = process.env.REACT_APP_URL
+  const societyId = Cookies.get("societyId");
   const theme = useTheme();
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -50,9 +52,9 @@ const Journalvouchers = () => {
   const [debitLedOption, setDebitLedOption] = useState([]);
   const [selectedDebitLedOption, setSelectedDebitLedOption] = useState(null);
 
-  const fetchDebitLedger = async () => {
+  const fetchDebitLedger =useCallback( async () => {
     try {
-      const response = await fetch(`${REACT_APP_URL}/Account`);
+      const response = await fetch(`${REACT_APP_URL}/Account/society/${societyId}`);
       const result = await response.json();
 
       const options = result
@@ -64,23 +66,24 @@ const Journalvouchers = () => {
           _id: acc._id,
           label: acc.accountName
         }));
+         console.log("Final Options:", options); 
 
       setDebitLedOption(options);
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
-  };
+  },[REACT_APP_URL,societyId]);
 
 
   //Fetch Cr ledger
   const [crLedOption, setCrLedOption] = useState([]);
   const [selectedCrLedOption, setSelectedCrLedOption] = useState(null);
 
-  const fetchCrLedger = async () => {
+  const fetchCrLedger =useCallback( async () => {
     try {
       const [accountRes, memberRes] = await Promise.all([
-        fetch(`${REACT_APP_URL}/Account`),
-        fetch(`${REACT_APP_URL}/member`)
+        fetch(`${REACT_APP_URL}/Account/society/${societyId}`),
+        fetch(`${REACT_APP_URL}/Member/society/${societyId}`)
       ]);
 
       const accountData = await accountRes.json();
@@ -102,16 +105,16 @@ const Journalvouchers = () => {
     } catch (error) {
       console.error("Error fetching accounts or members:", error);
     }
-  };
+  },[REACT_APP_URL,societyId]);
 
   //fetch Invoices
   const [invoice, setInvoice] = useState([])
   const [selectedInvoices, setselectedInvoices] = useState('')
 
-  const fetchInvoice = async () => {
+  const fetchInvoice =useCallback(async () => {
     try {
       const response = await fetch(
-        `${REACT_APP_URL}/InvoiceHeader`
+        `${REACT_APP_URL}/InvoiceHeader/society/${societyId}`
       );
       const result = await response.json();
 
@@ -127,7 +130,7 @@ const Journalvouchers = () => {
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
-  };
+  },[REACT_APP_URL,societyId ]);
 
   //transaction type 
   const [transactionType, setTransactionType] = useState("");
@@ -182,7 +185,7 @@ const Journalvouchers = () => {
       // ✅ UPDATE
       if (receiptId) {
         await axios.put(
-          `${REACT_APP_URL}/RecieptVoucher/${receiptId}`,
+          `${REACT_APP_URL}/RecieptVoucher/society/${societyId}/receiptv/${receiptId}`,
           receiptVoucherData
         );
 
@@ -191,7 +194,7 @@ const Journalvouchers = () => {
       // ✅ CREATE
       else {
         await axios.post(
-          `${REACT_APP_URL}/RecieptVoucher`,
+          `${REACT_APP_URL}/RecieptVoucher/society/${societyId}`,
           receiptVoucherData
         );
 
@@ -225,8 +228,8 @@ const Journalvouchers = () => {
   //get header
   const [receiptData, setReceiptData] = useState([]);
 
-  const getRecieptVoucher = () => {
-    const url = `${REACT_APP_URL}/RecieptVoucher`;
+  const getRecieptVoucher =useCallback( () => {
+    const url = `${REACT_APP_URL}/RecieptVoucher/society/${societyId}`;
     // console.log(" URL:", url);
     const requestOptions = {
       method: "GET",
@@ -240,7 +243,26 @@ const Journalvouchers = () => {
 
       })
       .catch((error) => console.error(error));
-  };
+  },[REACT_APP_URL,societyId]);
+
+
+  //for org data 
+  const [orgData, setOrgData] = useState(null);
+  const fetchOrgData = useCallback (async () => {
+    try {
+      const response = await fetch(`${REACT_APP_URL}/Organisation/${societyId}`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch organization data");
+      }
+
+      const data = await response.json();
+       console.log(data);
+      setOrgData(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  },[REACT_APP_URL,societyId]);
 
   useEffect(() => {
     fetchDebitLedger();
@@ -249,7 +271,7 @@ const Journalvouchers = () => {
     getRecieptVoucher();
     fetchOrgData()
 
-  }, []);
+  }, [fetchDebitLedger,fetchCrLedger,fetchInvoice,getRecieptVoucher,fetchOrgData]);
 
 
   const [previewData, setPreviewData] = useState(null);
@@ -471,29 +493,13 @@ const Journalvouchers = () => {
 
     pdf.save(`Receiptvoucher${receiptNo}.pdf`);
   };
-  //for org data 
-  const [orgData, setOrgData] = useState(null);
-  const fetchOrgData = async () => {
-    try {
-      const response = await fetch(`${REACT_APP_URL}/Organisation/`);
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch organization data");
-      }
-
-      const data = await response.json();
-      // console.log(data);
-      setOrgData(data[0]);
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
+  
 
   //delete JV
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const handleDeleteTemp = () => {
-    const url = `${REACT_APP_URL}/RecieptVoucher/${receiptId}`;
+    const url = `${REACT_APP_URL}/RecieptVoucher/society/${societyId}/receiptv/${receiptId}`;
 
     fetch(url, { method: "DELETE" })
       .then((response) => response.json())
@@ -1047,4 +1053,4 @@ const Journalvouchers = () => {
   )
 }
 
-export default Journalvouchers
+export default Receiptvouchers

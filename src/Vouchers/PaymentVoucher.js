@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef,useCallback } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Autocomplete, useMediaQuery, Box, Button, Typography, TextField, Drawer, Divider, } from '@mui/material';
 import { MaterialReactTable, useMaterialReactTable, } from 'material-react-table';
 import CloseIcon from '@mui/icons-material/Close';
@@ -16,9 +16,11 @@ import axios from 'axios';
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
+import Cookies from "js-cookie";
 
 const PaymentVoucher = () => {
   const REACT_APP_URL = process.env.REACT_APP_URL
+  const societyId = Cookies.get("societyId");
   const theme = useTheme();
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -52,9 +54,9 @@ const PaymentVoucher = () => {
 
   const [date, setDate] = useState(new Date());
 
-  const fetchDebitLedger = async () => {
+  const fetchDebitLedger =useCallback( async () => {
     try {
-      const response = await fetch(`${REACT_APP_URL}/Account`);
+      const response = await fetch(`${REACT_APP_URL}/Account/society/${societyId}`);
       const result = await response.json();
 
       // console.log("ledger info:", result);
@@ -70,14 +72,14 @@ const PaymentVoucher = () => {
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
-  };
+  },[REACT_APP_URL,societyId]);
 
   const [crLedOption, setCrLedOption] = useState([]);
   const [selectedCrLedOption, setSelectedCrLedOption] = useState('');
 
-  const fetchCrLedger = async () => {
+  const fetchCrLedger =useCallback( async () => {
     try {
-      const response = await fetch(`${REACT_APP_URL}/Account`);
+      const response = await fetch(`${REACT_APP_URL}/Account/society/${societyId}`);
       const result = await response.json();
 
       // console.log("ledger info:", result);
@@ -93,7 +95,7 @@ const PaymentVoucher = () => {
     } catch (error) {
       console.error("Error fetching accounts:", error);
     }
-  };
+  },[REACT_APP_URL,societyId]);
 
 
   //  transactionType
@@ -129,14 +131,14 @@ const PaymentVoucher = () => {
 
       if (paymentId) {
         await axios.put(
-          `${REACT_APP_URL}/PaymentVoucher/${paymentId}`,
+          `${REACT_APP_URL}/paymentVoucher/society/${societyId}/payment/${paymentId}`,
           PaymentVoucherData
         );
 
         toast.success("Payment Voucher updated successfully!");
       } else {
         await axios.post(
-          `${REACT_APP_URL}/PaymentVoucher`,
+          `${REACT_APP_URL}/paymentVoucher/society/${societyId}`,
           PaymentVoucherData
         );
 
@@ -148,8 +150,8 @@ const PaymentVoucher = () => {
       getPaymentVoucher();
 
     } catch (error) {
-      console.error("Error saving Journal Voucher:", error);
-      toast.error("Something went wrong while saving Journal Voucher");
+      console.error("Error saving Payment Voucher:", error);
+      toast.error("Something went wrong while saving Payment Voucher");
     }
   };
 
@@ -169,8 +171,8 @@ const PaymentVoucher = () => {
   //get header
   const [paymentData, setPaymentData] = useState([]);
 
-  const getPaymentVoucher = () => {
-    const url = `${REACT_APP_URL}/PaymentVoucher`;
+  const getPaymentVoucher =useCallback( () => {
+    const url = `${REACT_APP_URL}/paymentVoucher/society/${societyId}`;
     // console.log(" URL:", url);
     const requestOptions = {
       method: "GET",
@@ -184,7 +186,26 @@ const PaymentVoucher = () => {
 
       })
       .catch((error) => console.error(error));
-  };
+  },[REACT_APP_URL,societyId]);
+
+
+ //for org data 
+  const [orgData, setOrgData] = useState(null);
+  const fetchOrgData = useCallback ( async () => {
+    try {
+      const response = await fetch(`${REACT_APP_URL}/Organisation/${societyId}`);
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch organization data");
+      }
+
+      const data = await response.json();
+      // console.log(data);
+      setOrgData(data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  },[REACT_APP_URL,societyId]);
 
   useEffect(() => {
     fetchDebitLedger();
@@ -192,7 +213,7 @@ const PaymentVoucher = () => {
     getPaymentVoucher();
     fetchOrgData()
 
-  }, []);
+  }, [fetchDebitLedger,fetchCrLedger,getPaymentVoucher,fetchOrgData]);
 
   const [previewData, setPreviewData] = useState(null);
 
@@ -372,29 +393,13 @@ const PaymentVoucher = () => {
     pdf.save(`PaymentVoucher_${PVNo}.pdf`);
   };
 
-  //for org data 
-  const [orgData, setOrgData] = useState(null);
-  const fetchOrgData = async () => {
-    try {
-      const response = await fetch(`${REACT_APP_URL}/Organisation/`);
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch organization data");
-      }
-
-      const data = await response.json();
-      // console.log(data);
-      setOrgData(data[0]);
-    } catch (err) {
-      console.error(err.message);
-    }
-  };
+ 
 
   //delete JV
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const handleDeleteTemp = () => {
-    const url = `${REACT_APP_URL}/PaymentVoucher/${paymentId}`;
+    const url = `${REACT_APP_URL}/paymentVoucher/society/${societyId}/payment/${paymentId}`;
 
     fetch(url, { method: "DELETE" })
       .then((response) => response.json())

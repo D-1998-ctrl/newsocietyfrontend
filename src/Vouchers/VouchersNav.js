@@ -33,11 +33,11 @@ const VoucherNav = () => {
                         }
                     }}
                 >
-                    <NavLink to="/voucher/journalvouchers">Journal Vouchers</NavLink>
-                    <NavLink to="/voucher/receiptvouchers">Receipt Vouchers</NavLink>
-                    <NavLink to="/voucher/purchasevoucher">Purchase Voucher</NavLink>
-                    <NavLink to="/voucher/paymentvoucher">Payment Voucher</NavLink>
-                    <NavLink to="/voucher/contravoucher">Contra Voucher</NavLink>
+                    <NavLink to="journalvouchers">Journal Vouchers</NavLink>
+                    <NavLink to="receiptvouchers">Receipt Vouchers</NavLink>
+                    <NavLink to="purchasevoucher">Purchase Voucher</NavLink>
+                    <NavLink to="paymentvoucher">Payment Voucher</NavLink>
+                    <NavLink to="contravoucher">Contra Voucher</NavLink>
 
                 </Box>
             </Box>
